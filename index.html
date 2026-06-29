@@ -1,0 +1,2247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusVoice — College Feedback Platform</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #F7F8FA;
+            --surface: #FFFFFF;
+            --navy: #0D1B2A;
+            --navy-soft: #2C3E50;
+            --navy-muted: #4A5568;
+            --sage: #5B8C6B;
+            --sage-hover: #4A7A5A;
+            --sage-light: #E8F3EC;
+            --sage-mid: #C8DDD0;
+            --border: #E4E9F0;
+            --border-dark: #C8D3DF;
+            --muted: #8796AB;
+            --error: #B0362A;
+            --error-light: #FBECEA;
+            --warning: #C47B22;
+            --warn-light: #FEF5E7;
+            --font-ui: 'DM Sans', system-ui, sans-serif;
+            --font-disp: 'Playfair Display', Georgia, serif;
+            --radius: 14px;
+            --radius-sm: 8px;
+            --shadow-sm: 0 1px 3px rgba(13, 27, 42, 0.05), 0 2px 8px rgba(13, 27, 42, 0.04);
+            --shadow: 0 2px 8px rgba(13, 27, 42, 0.07), 0 8px 24px rgba(13, 27, 42, 0.05);
+            --shadow-lg: 0 8px 32px rgba(13, 27, 42, 0.12);
+            --transition: 0.18s ease;
+        }
+
+        /* ── Base ─────────────────────────────────────────────────────── */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-ui);
+            background: var(--bg);
+            color: var(--navy);
+            min-height: 100vh;
+            font-size: 15px;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: var(--sage);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Header ───────────────────────────────────────────────────── */
+        header {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 200;
+        }
+
+        .header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 28px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .logo {
+            font-family: var(--font-disp);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--navy);
+            letter-spacing: -0.4px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .logo span {
+            color: var(--sage);
+        }
+
+        /* Desktop nav */
+        .nav-desktop {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            font-family: var(--font-ui);
+            font-size: 13.5px;
+            font-weight: 500;
+            padding: 7px 15px;
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            transition: background var(--transition), color var(--transition);
+            background: transparent;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            background: var(--sage-light);
+            color: var(--sage);
+        }
+
+        .nav-btn.active {
+            background: var(--sage-light);
+            color: var(--sage);
+            font-weight: 600;
+        }
+
+        .nav-cta {
+            margin-left: 10px;
+            background: var(--sage);
+            color: #fff !important;
+            border-radius: var(--radius-sm);
+        }
+
+        .nav-cta:hover {
+            background: var(--sage-hover) !important;
+            color: #fff !important;
+        }
+
+        .nav-cta.active {
+            background: var(--sage-hover) !important;
+        }
+
+        /* Hamburger (mobile) */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 8px;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: var(--navy);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .hamburger.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* Mobile nav drawer */
+        .nav-mobile {
+            display: none;
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 20px 16px;
+            z-index: 199;
+            box-shadow: var(--shadow);
+        }
+
+        .nav-mobile.open {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-mobile .nav-btn {
+            font-size: 15px;
+            padding: 10px 14px;
+            text-align: left;
+        }
+
+        /* ── Main layout ──────────────────────────────────────────────── */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 44px 28px 100px;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        /* ── Buttons ──────────────────────────────────────────────────── */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--sage);
+            color: #fff;
+            border: none;
+            padding: 12px 26px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            font-family: var(--font-ui);
+            cursor: pointer;
+            transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+            letter-spacing: 0.1px;
+            line-height: 1;
+        }
+
+        .btn-primary:hover {
+            background: var(--sage-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(91, 140, 107, 0.35);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: 1.5px solid var(--border-dark);
+            color: var(--navy-muted);
+            padding: 11px 22px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            font-family: var(--font-ui);
+            cursor: pointer;
+            transition: all var(--transition);
+            line-height: 1;
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--navy);
+            color: var(--navy);
+        }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: 1.5px solid var(--sage);
+            color: var(--sage);
+            padding: 11px 22px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            font-family: var(--font-ui);
+            cursor: pointer;
+            transition: all var(--transition);
+            line-height: 1;
+        }
+
+        .btn-outline:hover {
+            background: var(--sage);
+            color: #fff;
+        }
+
+        /* ── Section label ────────────────────────────────────────────── */
+        .section-eyebrow {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--sage);
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-family: var(--font-disp);
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--navy);
+            letter-spacing: -0.4px;
+            line-height: 1.25;
+            margin-bottom: 6px;
+        }
+
+        .section-sub {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* ── Cards ────────────────────────────────────────────────────── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-family: var(--font-disp);
+            font-size: 21px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: -0.2px;
+        }
+
+        .card-sub {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 28px;
+            line-height: 1.5;
+        }
+
+        /* ── Form fields ──────────────────────────────────────────────── */
+        .field {
+            margin-bottom: 22px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--navy-soft);
+            margin-bottom: 8px;
+            letter-spacing: 0.1px;
+        }
+
+        .field-hint {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 400;
+            margin-left: 6px;
+        }
+
+        .field input,
+        .field select,
+        .field textarea {
+            width: 100%;
+            font-family: var(--font-ui);
+            font-size: 14px;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            color: var(--navy);
+            transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .field select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238796AB' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 38px;
+            cursor: pointer;
+        }
+
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            border-color: var(--sage);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(91, 140, 107, 0.12);
+        }
+
+        .field textarea {
+            resize: vertical;
+            min-height: 110px;
+            line-height: 1.6;
+        }
+
+        .field input::placeholder,
+        .field textarea::placeholder {
+            color: var(--muted);
+            opacity: 0.7;
+        }
+
+        /* ── Star rating ──────────────────────────────────────────────── */
+        .rating-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .star-btn {
+            width: 40px;
+            height: 40px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            font-size: 20px;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: all 0.1s;
+            color: var(--border-dark);
+            line-height: 1;
+            padding: 0;
+        }
+
+        .star-btn.hover-fill,
+        .star-btn.active {
+            background: #FFFAED;
+            border-color: #E8B730;
+            color: #E8A800;
+            transform: scale(1.1);
+        }
+
+        .rating-label {
+            font-size: 13px;
+            color: var(--muted);
+            margin-left: 4px;
+        }
+
+        /* ── Category chips ───────────────────────────────────────────── */
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .chip {
+            padding: 7px 16px;
+            border-radius: 100px;
+            border: 1.5px solid var(--border);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            background: var(--bg);
+            color: var(--navy-muted);
+            transition: all var(--transition);
+            user-select: none;
+            line-height: 1;
+        }
+
+        .chip:hover {
+            border-color: var(--sage);
+            color: var(--sage);
+            background: var(--sage-light);
+        }
+
+        .chip.selected {
+            background: var(--sage-light);
+            border-color: var(--sage);
+            color: var(--sage);
+            font-weight: 600;
+        }
+
+        /* ── Sentiment preview ────────────────────────────────────────── */
+        .sentiment-preview {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 11px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--muted);
+            min-height: 44px;
+            background: var(--bg);
+            transition: border-color var(--transition);
+        }
+
+        .sentiment-preview.pos {
+            border-color: var(--sage-mid);
+            background: var(--sage-light);
+            color: #3D7A54;
+        }
+
+        .sentiment-preview.neg {
+            border-color: #DFA9A5;
+            background: var(--error-light);
+            color: var(--error);
+        }
+
+        .sentiment-preview.neu {
+            border-color: #E8C98A;
+            background: var(--warn-light);
+            color: var(--warning);
+        }
+
+        .sentiment-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--border-dark);
+            flex-shrink: 0;
+            transition: background 0.3s;
+        }
+
+        .sentiment-dot.pos {
+            background: var(--sage);
+        }
+
+        .sentiment-dot.neg {
+            background: var(--error);
+        }
+
+        .sentiment-dot.neu {
+            background: var(--warning);
+        }
+
+        /* ── Form actions ─────────────────────────────────────────────── */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ── HOME: Hero ───────────────────────────────────────────────── */
+        .hero {
+            text-align: center;
+            padding: 56px 0 48px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--sage-light);
+            color: var(--sage);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 5px 14px;
+            border-radius: 100px;
+            margin-bottom: 20px;
+            border: 1px solid var(--sage-mid);
+        }
+
+        .hero h1 {
+            font-family: var(--font-disp);
+            font-size: 44px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            line-height: 1.12;
+            color: var(--navy);
+            margin-bottom: 16px;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--sage);
+        }
+
+        .hero p {
+            color: var(--muted);
+            font-size: 16px;
+            max-width: 460px;
+            margin: 0 auto 32px;
+            line-height: 1.7;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* HOME: Stats ─────────────────────────────────────────────────── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 36px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow var(--transition);
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow);
+        }
+
+        .stat-icon {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .stat-num {
+            font-family: var(--font-disp);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--navy);
+            letter-spacing: -0.5px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 5px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* HOME: Recent ────────────────────────────────────────────────── */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .text-link {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--sage);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: var(--font-ui);
+        }
+
+        .text-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Feedback items ───────────────────────────────────────────── */
+        .feedback-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px 24px;
+            margin-bottom: 14px;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow var(--transition), border-color var(--transition);
+        }
+
+        .feedback-item:hover {
+            box-shadow: var(--shadow);
+            border-color: var(--border-dark);
+        }
+
+        .fi-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .fi-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            padding: 3px 10px;
+            border-radius: 100px;
+        }
+
+        .tag-dept {
+            background: var(--sage-light);
+            color: var(--sage);
+            border: 1px solid var(--sage-mid);
+        }
+
+        .tag-cat {
+            background: var(--bg);
+            color: var(--muted);
+            border: 1px solid var(--border);
+        }
+
+        .fi-course {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        .fi-stars {
+            font-size: 14px;
+            color: #E8A800;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .fi-text {
+            font-size: 14px;
+            color: var(--navy-soft);
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .fi-footer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .fi-date {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .badge {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 3px 10px;
+            border-radius: 100px;
+        }
+
+        .badge-pos {
+            background: var(--sage-light);
+            color: #3A7A52;
+            border: 1px solid var(--sage-mid);
+        }
+
+        .badge-neg {
+            background: var(--error-light);
+            color: var(--error);
+            border: 1px solid #EAB8B5;
+        }
+
+        .badge-neu {
+            background: var(--warn-light);
+            color: var(--warning);
+            border: 1px solid #E8C88A;
+        }
+
+        .ai-btn {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 3px 12px;
+            cursor: pointer;
+            font-family: var(--font-ui);
+            margin-left: auto;
+            transition: all var(--transition);
+            white-space: nowrap;
+        }
+
+        .ai-btn:hover {
+            border-color: var(--sage);
+            color: var(--sage);
+            background: var(--sage-light);
+        }
+
+        .ai-summary {
+            border-top: 1px solid var(--border);
+            margin-top: 14px;
+            padding-top: 14px;
+            font-size: 13px;
+            color: var(--navy-muted);
+            line-height: 1.6;
+            display: none;
+        }
+
+        .ai-summary.visible {
+            display: block;
+        }
+
+        .ai-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            color: var(--sage);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* ── Browse: filters ─────────────────────────────────────────── */
+        .browse-controls {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        .search-wrap {
+            flex: 1;
+            min-width: 180px;
+            position: relative;
+        }
+
+        .search-wrap input {
+            width: 100%;
+            font-family: var(--font-ui);
+            font-size: 14px;
+            padding: 10px 14px 10px 38px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+            color: var(--navy);
+            outline: none;
+            transition: border-color var(--transition), box-shadow var(--transition);
+        }
+
+        .search-wrap input:focus {
+            border-color: var(--sage);
+            box-shadow: 0 0 0 3px rgba(91, 140, 107, 0.12);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            font-size: 15px;
+            pointer-events: none;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            font-size: 12.5px;
+            font-weight: 500;
+            font-family: var(--font-ui);
+            padding: 7px 14px;
+            border-radius: 100px;
+            border: 1.5px solid var(--border);
+            background: var(--surface);
+            color: var(--muted);
+            cursor: pointer;
+            transition: all var(--transition);
+            line-height: 1;
+        }
+
+        .filter-chip:hover {
+            border-color: var(--sage);
+            color: var(--sage);
+        }
+
+        .filter-chip.active {
+            background: var(--sage);
+            border-color: var(--sage);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .browse-meta {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 16px;
+        }
+
+        /* ── Insights ─────────────────────────────────────────────────── */
+        .insight-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .insight-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .insight-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            margin-bottom: 10px;
+        }
+
+        .insight-val {
+            font-family: var(--font-disp);
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--navy);
+            letter-spacing: -0.5px;
+        }
+
+        .insight-sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        .dept-bar-wrap {
+            margin-bottom: 14px;
+        }
+
+        .dept-bar-wrap:last-child {
+            margin-bottom: 0;
+        }
+
+        .dept-bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: var(--navy-soft);
+        }
+
+        .dept-bar-label span:last-child {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .dept-bar-track {
+            background: var(--border);
+            border-radius: 100px;
+            height: 7px;
+            overflow: hidden;
+        }
+
+        .dept-bar-fill {
+            background: linear-gradient(90deg, var(--sage), #7BBF8C);
+            border-radius: 100px;
+            height: 7px;
+            width: 0;
+            transition: width 0.7s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .ai-box {
+            background: linear-gradient(135deg, var(--sage-light) 0%, #F0F8F2 100%);
+            border: 1.5px solid var(--sage-mid);
+            border-radius: var(--radius);
+            padding: 26px;
+            margin-top: 20px;
+        }
+
+        .ai-box p {
+            font-size: 14px;
+            color: var(--navy-soft);
+            line-height: 1.7;
+        }
+
+        .ai-box-actions {
+            margin-top: 18px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* ── ABOUT view ───────────────────────────────────────────────── */
+        .about-hero {
+            background: linear-gradient(135deg, #0D1B2A 0%, #1A3248 100%);
+            border-radius: var(--radius);
+            padding: 52px 48px;
+            margin-bottom: 24px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-hero::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(91, 140, 107, 0.12);
+            pointer-events: none;
+        }
+
+        .about-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -60px;
+            left: -20px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(91, 140, 107, 0.08);
+            pointer-events: none;
+        }
+
+        .about-badge {
+            display: inline-block;
+            background: rgba(91, 140, 107, 0.25);
+            color: #8DD8A5;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            padding: 5px 14px;
+            border-radius: 100px;
+            border: 1px solid rgba(141, 216, 165, 0.3);
+            margin-bottom: 18px;
+        }
+
+        .about-hero h2 {
+            font-family: var(--font-disp);
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -0.7px;
+            line-height: 1.2;
+            margin-bottom: 14px;
+        }
+
+        .about-hero p {
+            font-size: 15px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.72);
+            max-width: 520px;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .about-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow var(--transition);
+        }
+
+        .about-card:hover {
+            box-shadow: var(--shadow);
+        }
+
+        .about-card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            font-size: 20px;
+            margin-bottom: 14px;
+        }
+
+        .icon-green {
+            background: var(--sage-light);
+        }
+
+        .icon-blue {
+            background: #EAF0FA;
+        }
+
+        .icon-amber {
+            background: #FEF5E7;
+        }
+
+        .icon-pink {
+            background: #FCE8F0;
+        }
+
+        .about-card h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 7px;
+            color: var(--navy);
+        }
+
+        .about-card p {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .how-it-works {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-num {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--sage);
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 12px;
+            font-family: var(--font-disp);
+        }
+
+        .step h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--navy);
+        }
+
+        .step p {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .tech-stack {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tech-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .tech-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--navy-soft);
+        }
+
+        .tech-badge-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ── Empty / Loading ──────────────────────────────────────────── */
+        .empty {
+            text-align: center;
+            padding: 64px 24px;
+            color: var(--muted);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        .empty-icon {
+            font-size: 40px;
+            margin-bottom: 14px;
+        }
+
+        .empty h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--navy-soft);
+            margin-bottom: 6px;
+        }
+
+        .empty p {
+            font-size: 14px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 13px;
+            height: 13px;
+            border: 2px solid var(--border);
+            border-top-color: var(--sage);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+            margin-right: 6px;
+            flex-shrink: 0;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── Divider ──────────────────────────────────────────────────── */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 32px 0;
+        }
+
+        /* ── Footer ───────────────────────────────────────────────────── */
+        footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 28px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 20px;
+        }
+
+        footer strong {
+            color: var(--navy-soft);
+        }
+
+        /* ── Toast ────────────────────────────────────────────────────── */
+        #toast {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            background: var(--navy);
+            color: #fff;
+            font-size: 13.5px;
+            font-weight: 500;
+            padding: 12px 22px;
+            border-radius: 10px;
+            opacity: 0;
+            transition: all 0.22s ease;
+            pointer-events: none;
+            z-index: 999;
+            max-width: 340px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        #toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ── Responsive ───────────────────────────────────────────────── */
+        @media (max-width: 700px) {
+            main {
+                padding: 28px 18px 80px;
+            }
+
+            .header-inner {
+                padding: 0 18px;
+            }
+
+            .nav-desktop {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero {
+                padding: 36px 0 32px;
+            }
+
+            .hero h1 {
+                font-size: 30px;
+            }
+
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-card:last-child {
+                grid-column: span 2;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-hero {
+                padding: 32px 24px;
+            }
+
+            .about-hero h2 {
+                font-size: 26px;
+            }
+
+            .insight-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 22px 20px;
+            }
+
+            .how-it-works {
+                padding: 22px 20px;
+            }
+        }
+
+        @media (max-width: 460px) {
+            .hero h1 {
+                font-size: 25px;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card:last-child {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ══════════ HEADER ══════════ -->
+    <header>
+        <div class="header-inner">
+            <div class="logo" onclick="showView('home')" role="button" tabindex="0">Campus<span>Voice</span></div>
+            <nav class="nav-desktop" id="nav-desktop">
+                <button class="nav-btn active" data-view="home" onclick="showView('home')">Home</button>
+                <button class="nav-btn" data-view="browse" onclick="showView('browse')">Browse</button>
+                <button class="nav-btn" data-view="insights" onclick="showView('insights')">Insights</button>
+                <button class="nav-btn" data-view="about" onclick="showView('about')">About</button>
+                <button class="nav-btn nav-cta" data-view="submit" onclick="showView('submit')">+ Submit
+                    Feedback</button>
+            </nav>
+            <button class="hamburger" id="hamburger" aria-label="Toggle navigation" onclick="toggleMobileNav()">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile nav drawer -->
+    <div class="nav-mobile" id="nav-mobile">
+        <button class="nav-btn" onclick="showView('home');   closeMobileNav()">Home</button>
+        <button class="nav-btn" onclick="showView('browse'); closeMobileNav()">Browse</button>
+        <button class="nav-btn" onclick="showView('insights');closeMobileNav()">Insights</button>
+        <button class="nav-btn" onclick="showView('about');  closeMobileNav()">About</button>
+        <button class="nav-btn" onclick="showView('submit'); closeMobileNav()">+ Submit Feedback</button>
+    </div>
+
+    <main>
+
+        <!-- ══════════ HOME ══════════ -->
+        <div id="view-home" class="view active">
+            <div class="hero">
+                <div class="hero-badge">✦ Anonymous &amp; Secure</div>
+                <h1>Your voice<br>shapes <em>campus life</em></h1>
+                <p>Share honest feedback on courses, faculty, infrastructure, and more. Every review helps make your
+                    college better.</p>
+                <div class="hero-actions">
+                    <button class="btn-primary" onclick="showView('submit')">Leave Feedback</button>
+                    <button class="btn-outline" onclick="showView('browse')">Read Reviews</button>
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-num" id="stat-total">0</div>
+                    <div class="stat-label">Total Reviews</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-num" id="stat-avg">—</div>
+                    <div class="stat-label">Avg. Rating</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏫</div>
+                    <div class="stat-num" id="stat-dept">0</div>
+                    <div class="stat-label">Departments</div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <div>
+                    <div class="section-eyebrow">Latest</div>
+                    <div class="section-title" style="font-size:20px;margin-bottom:0">Recent Feedback</div>
+                </div>
+                <button class="text-link" onclick="showView('browse')">View all →</button>
+            </div>
+            <div id="home-recent"></div>
+        </div>
+
+        <!-- ══════════ SUBMIT ══════════ -->
+        <div id="view-submit" class="view">
+            <div style="margin-bottom:28px">
+                <div class="section-eyebrow">Share Your Experience</div>
+                <div class="section-title">Submit Feedback</div>
+                <div class="section-sub">All submissions are completely anonymous. Please be constructive and specific.
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">New Feedback</div>
+                <div class="card-sub">Fields marked with * are required.</div>
+
+                <div class="field">
+                    <label>Department <span style="color:var(--error)">*</span></label>
+                    <select id="f-dept">
+                        <option value="">Select a department…</option>
+                        <option>Computer Science</option>
+                        <option>Mathematics</option>
+                        <option>Physics</option>
+                        <option>Chemistry</option>
+                        <option>Biology</option>
+                        <option>Mechanical Engineering</option>
+                        <option>Electrical Engineering</option>
+                        <option>Civil Engineering</option>
+                        <option>Economics</option>
+                        <option>Psychology</option>
+                        <option>English Literature</option>
+                        <option>History</option>
+                        <option>Business Administration</option>
+                        <option>Arts &amp; Design</option>
+                        <option>Law</option>
+                        <option>Medicine</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Course / Subject <span class="field-hint">(optional)</span></label>
+                    <input type="text" id="f-course" placeholder="e.g. Data Structures, Organic Chemistry…"
+                        maxlength="100">
+                </div>
+
+                <div class="field">
+                    <label>Category <span style="color:var(--error)">*</span></label>
+                    <div class="chips" id="category-chips">
+                        <div class="chip selected" data-val="Teaching">Teaching</div>
+                        <div class="chip" data-val="Infrastructure">Infrastructure</div>
+                        <div class="chip" data-val="Library">Library</div>
+                        <div class="chip" data-val="Hostel">Hostel</div>
+                        <div class="chip" data-val="Canteen">Canteen</div>
+                        <div class="chip" data-val="Events">Events</div>
+                        <div class="chip" data-val="Administration">Administration</div>
+                        <div class="chip" data-val="Labs">Labs</div>
+                        <div class="chip" data-val="Sports">Sports</div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Overall Rating <span style="color:var(--error)">*</span></label>
+                    <div class="rating-group" id="rating-stars">
+                        <button class="star-btn" data-val="1" type="button">★</button>
+                        <button class="star-btn" data-val="2" type="button">★</button>
+                        <button class="star-btn" data-val="3" type="button">★</button>
+                        <button class="star-btn" data-val="4" type="button">★</button>
+                        <button class="star-btn" data-val="5" type="button">★</button>
+                        <span class="rating-label" id="rating-label">Select a rating</span>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Your Feedback <span style="color:var(--error)">*</span></label>
+                    <textarea id="f-text"
+                        placeholder="Share your experience in detail — what worked well, what could be improved…"
+                        rows="5" oninput="debounceSentiment()"></textarea>
+                    <div class="sentiment-preview" id="sentiment-preview">
+                        <div class="sentiment-dot" id="sent-dot"></div>
+                        <span id="sent-text">Sentiment will appear as you type…</span>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-ghost" onclick="resetForm()">Clear Form</button>
+                    <button class="btn-primary" id="submit-btn" onclick="submitFeedback()">Submit Feedback</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════ BROWSE ══════════ -->
+        <div id="view-browse" class="view">
+            <div style="margin-bottom:24px">
+                <div class="section-eyebrow">Community Reviews</div>
+                <div class="section-title">All Feedback</div>
+            </div>
+
+            <div class="browse-controls">
+                <div class="search-wrap">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="browse-search" placeholder="Search feedback…" oninput="renderBrowse()">
+                </div>
+            </div>
+
+            <div class="filter-row" style="margin-bottom:16px">
+                <button class="filter-chip active" data-filter="all" onclick="setFilter('all',this)">All</button>
+                <button class="filter-chip" data-filter="Teaching"
+                    onclick="setFilter('Teaching',this)">Teaching</button>
+                <button class="filter-chip" data-filter="Infrastructure"
+                    onclick="setFilter('Infrastructure',this)">Infrastructure</button>
+                <button class="filter-chip" data-filter="Library" onclick="setFilter('Library',this)">Library</button>
+                <button class="filter-chip" data-filter="Hostel" onclick="setFilter('Hostel',this)">Hostel</button>
+                <button class="filter-chip" data-filter="Canteen" onclick="setFilter('Canteen',this)">Canteen</button>
+                <button class="filter-chip" data-filter="Labs" onclick="setFilter('Labs',this)">Labs</button>
+                <button class="filter-chip" data-filter="Administration"
+                    onclick="setFilter('Administration',this)">Admin</button>
+            </div>
+
+            <div class="browse-meta" id="browse-meta"></div>
+            <div id="browse-list"></div>
+        </div>
+
+        <!-- ══════════ INSIGHTS ══════════ -->
+        <div id="view-insights" class="view">
+            <div style="margin-bottom:28px">
+                <div class="section-eyebrow">Analytics</div>
+                <div class="section-title">Campus Insights</div>
+                <div class="section-sub">AI-powered analysis of all submitted feedback.</div>
+            </div>
+
+            <div class="insight-grid">
+                <div class="insight-card">
+                    <div class="insight-label">Total Submissions</div>
+                    <div class="insight-val" id="ins-total">0</div>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-label">Average Rating</div>
+                    <div class="insight-val" id="ins-avg">—</div>
+                    <div class="insight-sub">out of 5.0</div>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-label">Positive Sentiment</div>
+                    <div class="insight-val" id="ins-pos">0%</div>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-label">Most Active Dept.</div>
+                    <div class="insight-val" id="ins-top-dept" style="font-size:17px;letter-spacing:-0.2px">—</div>
+                </div>
+            </div>
+
+            <div class="card" style="padding:28px">
+                <div class="section-eyebrow">Volume</div>
+                <div style="font-size:15px;font-weight:600;color:var(--navy);margin-bottom:20px">Feedback by Department
+                </div>
+                <div id="dept-bars">
+                    <div style="color:var(--muted);font-size:14px">No data yet.</div>
+                </div>
+            </div>
+
+            <div class="ai-box" id="ai-insights-box">
+                <div class="ai-label">✦ AI Analysis</div>
+                <p id="ai-insights-text">Generate a comprehensive AI report that analyses all campus feedback,
+                    identifies key themes, and provides actionable recommendations for college administration.</p>
+                <div class="ai-box-actions">
+                    <button class="btn-primary" id="ai-report-btn" onclick="generateInsights()">Generate AI
+                        Report</button>
+                    <span id="ai-report-status" style="font-size:13px;color:var(--muted)"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════ ABOUT ══════════ -->
+        <div id="view-about" class="view">
+            <div class="about-hero">
+                <div class="about-badge">About CampusVoice</div>
+                <h2>Making student voices<br>heard and acted upon</h2>
+                <p>CampusVoice is an anonymous feedback platform built for colleges and universities. We believe
+                    meaningful change starts with honest, structured student input — and that administration needs the
+                    right tools to listen.</p>
+            </div>
+
+            <div class="about-grid">
+                <div class="about-card">
+                    <div class="about-card-icon icon-green">🔒</div>
+                    <h3>100% Anonymous</h3>
+                    <p>No login required. No personal data collected. Your identity is never linked to your feedback —
+                        ever.</p>
+                </div>
+                <div class="about-card">
+                    <div class="about-card-icon icon-blue">🤖</div>
+                    <h3>AI-Powered Insights</h3>
+                    <p>Built on Claude AI, every submission gets real-time sentiment analysis and admin reports are
+                        generated intelligently from patterns across all feedback.</p>
+                </div>
+                <div class="about-card">
+                    <div class="about-card-icon icon-amber">📊</div>
+                    <h3>Structured Feedback</h3>
+                    <p>Department tagging, category selection, and star ratings make it easy to filter, compare, and act
+                        on specific areas of campus life.</p>
+                </div>
+                <div class="about-card">
+                    <div class="about-card-icon icon-pink">🎯</div>
+                    <h3>Action-Oriented</h3>
+                    <p>Every insight is designed to surface something addressable — not just sentiment scores, but
+                        specific recommendations administrators can act on.</p>
+                </div>
+            </div>
+
+            <div class="how-it-works">
+                <div class="section-eyebrow">Process</div>
+                <div class="section-title" style="font-size:20px">How It Works</div>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <h4>Write Your Feedback</h4>
+                        <p>Select your department and category, rate your experience, and describe it in your own words.
+                        </p>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <h4>AI Analyses It</h4>
+                        <p>Claude instantly analyses sentiment and key themes. No human reads your raw feedback without
+                            permission.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <h4>Insights Surface</h4>
+                        <p>Patterns emerge in the Insights dashboard, giving administration clear, data-backed
+                            priorities to address.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-stack">
+                <div class="section-eyebrow">Built With</div>
+                <div class="section-title" style="font-size:20px;margin-bottom:4px">Technology Stack</div>
+                <div class="section-sub">A lightweight, dependency-free web app with AI at its core.</div>
+                <div class="tech-items">
+                    <div class="tech-badge">
+                        <div class="tech-badge-dot" style="background:#E8A800"></div>HTML5 &amp; CSS3
+                    </div>
+                    <div class="tech-badge">
+                        <div class="tech-badge-dot" style="background:#3B82F6"></div>Vanilla JavaScript
+                    </div>
+                    <div class="tech-badge">
+                        <div class="tech-badge-dot" style="background:#5B8C6B"></div>Claude AI (Sonnet 4.6)
+                    </div>
+                    <div class="tech-badge">
+                        <div class="tech-badge-dot" style="background:#8B5CF6"></div>Anthropic Messages API
+                    </div>
+                    <div class="tech-badge">
+                        <div class="tech-badge-dot" style="background:#F59E0B"></div>localStorage
+                    </div>
+                    <div class="tech-badge">
+                        <div class="tech-badge-dot" style="background:#EC4899"></div>Google Fonts
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div style="text-align:center;padding:12px 0 8px">
+                <div class="section-title" style="font-size:22px;margin-bottom:10px">Ready to make a difference?</div>
+                <p style="color:var(--muted);font-size:14px;margin-bottom:22px">Your feedback is seen by the right
+                    people — and it matters.</p>
+                <button class="btn-primary" style="font-size:15px;padding:14px 32px" onclick="showView('submit')">Submit
+                    Your Feedback</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <strong>CampusVoice</strong> &nbsp;·&nbsp; Anonymous College Feedback Platform &nbsp;·&nbsp; Powered by Claude
+        AI
+    </footer>
+
+    <div id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+        // ──────────────────────────────────────────────────────────────────────────────
+        // STATE
+        // ──────────────────────────────────────────────────────────────────────────────
+        let feedbackData = [];
+        let selectedRating = 0;
+        let selectedCategory = 'Teaching';
+        let currentFilter = 'all';
+        let sentimentTimer = null;
+        let isSubmitting = false;
+        let aiReportGenerated = false;
+
+        // Safe load from localStorage
+        try {
+            const raw = localStorage.getItem('campusFeedback');
+            if (raw) feedbackData = JSON.parse(raw);
+            if (!Array.isArray(feedbackData)) feedbackData = [];
+        } catch (e) {
+            feedbackData = [];
+        }
+
+        // ──────────────────────────────────────────────────────────────────────────────
+        // NAVIGATION
+        // ──────────────────────────────────────────────────────────────────────────────
+        const VIEW_ORDER = ['home', 'browse', 'insights', 'about', 'submit'];
+
+        function showView(name) {
+            if (!VIEW_ORDER.includes(name)) return;
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            const el = document.getElementById('view-' + name);
+            if (el) el.classList.add('active');
+
+            // Update nav active states (desktop + mobile)
+            document.querySelectorAll('[data-view]').forEach(b => {
+                b.classList.toggle('active', b.dataset.view === name);
+            });
+            document.querySelectorAll('.nav-mobile .nav-btn').forEach((b, i) => {
+                b.classList.toggle('active', VIEW_ORDER[i] === name);
+            });
+
+            // Side-effects per view
+            if (name === 'home') renderHome();
+            if (name === 'browse') renderBrowse();
+            if (name === 'insights') renderInsights();
+            if (name === 'about') { } // static
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ──────────────────────────────────────────────────────────────────────────────
+        // MOBILE NAV
+        // ──────────────────────────────────────────────────────────────────────────────
+        function toggleMobileNav() {
+            const nav = document.getElementById('nav-mobile');
+            const btn = document.getElementById('hamburger');
+            const open = nav.classList.toggle('open');
+            btn.classList.toggle('open', open);
+            btn.setAttribute('aria-expanded', open);
+        }
+        function closeMobileNav() {
+            document.getElementById('nav-mobile').classList.remove('open');
+            document.getElementById('hamburger').classList.remove('open');
+        }
+
+        // ──────────────────────────────────────────────────────────────────────────────
+        // STAR RATING (with cascade hover)
+        // ──────────────────────────────────────────────────────────────────────────────
+        const RATING_LABELS = ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+
+        function initStars() {
+            const stars = document.querySelectorAll('.star-btn');
+            stars.forEach((btn, idx) => {
+                btn.addEventListener('click', () => {
+                    selectedRating = parseInt(btn.dataset.val);
+                    updateStarUI();
+                    document.getElementById('rating-label').textContent = RATING_LABELS[selectedRating] || '';
+                });
+                btn.addEventListener('mouseenter', () => {
+                    const hoverVal = parseInt(btn.dataset.val);
+                    stars.forEach((b, i) => b.classList.toggle('hover-fill', i < hoverVal));
+                });
+                btn.addEventListener('mouseleave', () => {
+                    stars.forEach(b => b.classList.remove('hover-fill'));
+                });
+            });
+        }
+
+        function updateStarUI() {
+            document.querySelectorAll('.star-btn').forEach((b, i) => {
+                b.classList.toggle('active', i < selectedRating);
+            });
+        }
+
+        // ──────────────────────────────────────────────────────────────────────────────
+        // CATEGORY CHIPS
+        // ──────────────────────────────────────────────────────────────────────────────
+        function initChips() {
+            document.querySelectorAll('#category-chips .chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    document.querySelectorAll('#category-chips .chip').forEach(c => c.classList.remove('selected'));
+                    chip.classList.add('selected');
+                    selectedCategory = chip.dataset.val;
+                });
+            });
+        }
+
+        // ──────────────────────────────────────────────────────────────────────────────
+        // SENTIMENT ANALYSIS
+        // ──────────────────────────────────────────────────────────────────────────────
+        function debounceSentiment() {
+            clearTimeout(sentimentTimer);
+            const text = document.getElementById('f-text').value.trim();
+            if (text.length < 20) { resetSentimentUI(); return; }
+            const preview = document.getElementById('sentiment-preview');
+            preview.className = 'sentiment-preview';
+            document.getElementById('sent-text').innerHTML = '<span class="spinner"></span>Analysing…';
+            sentimentTimer = setTimeout(() => analyseSentiment(text), 1000);
+        }
+
+        function resetSentimentUI() {
+            document.getElementById('sent-dot').className = 'sentiment-dot';
+            document.getElementById('sentiment-preview').className = 'sentiment-preview';
+            document.getElementById('sent-text').textContent = 'Sentiment will appear as you type…';
+        }
+
+        async function analyseSentiment(text) {
+            try {
+                const res = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-6',
+                        max_tokens: 80,
+                        system: 'You are a sentiment analyser for college feedback. Reply ONLY with valid JSON: {"sentiment":"positive","label":"Constructive & positive"}. Sentiment must be one of: positive, negative, neutral. No markdown, no explanation.',
+                        messages: [{ role: 'user', content: 'Analyse sentiment: ' + text }]
+                    })
+                });
+                const data = await res.json();
+                const raw = (data.content?.[0]?.text || '{}').replace(/```json|```/g, '').trim();
+                const result = JSON.parse(raw);
+                const sent = result.sentiment;
+                const dot = document.getElementById('sent-dot');
+                const preview = document.getElementById('sentiment-preview');
+                dot.className = 'sentiment-dot';
+                preview.className = 'sentiment-preview';
+                if (sent === 'positive') { dot.classList.add('pos'); preview.classList.add('pos'); }
+                else if (sent === 'negative') { dot.classList.add('neg'); preview.classList.add('neg'); }
+                else { dot.classList.add('neu'); preview.classList.add('neu'); }
+                document.getElementById('sent-text').textContent = result.label || sent || 'Analysed';
+            } catch {
+                resetSentimentUI();
+            }
+        }
+
+        function getCurrentSentiment() {
+            const dot = document.getElementById('sent-dot');
+            if (dot.classList.contains('pos')) return 'positive';
+            if (dot.classList.contains('neg')) return 'negative';
+            return 'neutral';
+        }
+
+        // ──────────────────────────────────────────────────────────────────────────────
+        // SUBMIT
+        // ──────────────────────────────────────────────────────────────────────────────
+        async function submitFeedback() {
+            if (isSubmitting) return;
+            const dept = document.getElementById('f-dept').value.trim();
+            const course = document.getElementById('f-course').value.trim();
+            const text = document.getElementById('f-text').value.trim();
+
+            if (!dept) { showToast('⚠ Please select a department.'); return; }
+            if (!text) { showToast('⚠ Please write your feedback.'); return; }
+            if (text.length < 20) { showToast('⚠ Feedback must be at least 20 characters.'); return; }
+            if (!selectedRating) { showToast('⚠ Please select a star rating.'); return; }
+
+            // If sentiment analysis is still pending, wait briefly for it
+            clearTimeout(sentimentTimer);
+            if (text.length >= 20) {
+                const sentText = document.getElementById('sent-text').textContent;
+                const isPending = sentText.includes('Analysing') || sentText.includes('will appear');
+                if (isPending) {
+                    showToast('Analysing sentiment, please wait…');
+                    await new Promise(r => setTimeout(r, 1200));
+                }
+            }
+
+            isSubmitting = true;
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span>Submitting…';
+
+            const entry = {
+                id: Date.now() + Math.floor(Math.random() * 1000),
+                dept,
+                course: course || null,
+                category: selectedCategory,
+                rating: selectedRating,
+                text,
+                sentiment: getCurrentSentiment(),
+                date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+                aiSummary: null
+            };
+
+            feedbackData.unshift(entry);
+            saveData();
+
+            await new Promise(r => setTimeout(r, 400)); // slight UX delay
+            resetForm();
+            isSubmitting = false;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Submit Feedback';
+            showToast('✓ Feedback submitted. Thank you!');
+            showView('browse');
+        }
+
+        function resetForm() {
+            document.getElementById('f-dept').value = '';
+            document.getElementById('f-course').value = '';
+            document.getElementById('f-text').value = '';
+            selectedRating = 0;
+            document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('active', 'hover-fill'));
+            document.getElementById('rating-label').textContent = 'Select a rating';
+            document.querySelectorAll('#category-chips .chip').forEach(c => c.classList.remove('selected'));
+            document.querySelector('#category-chips .chip[data-val="Teaching"]').classList.add('selected');
+            selectedCategory = 'Teaching';
+            resetSentimentUI();
+        }
+
+        function saveData() {
+            try { localStorage.setItem('campusFeedback', JSON.stringify(feedbackData)); } catch (e) { }
+        }
+
+        // ──────────────────────────────────────────────────────────────────────────────
+        // RENDER HOME
+        // ──────────────────────────────────────────────────────────────────────────────
+        function renderHome() {
+            const total = feedbackData.length;
+            document.getElementById('stat-total').textContent = total;
+            const avg = total
+                ? (feedbackData.reduce((s, f) => s + f.rating, 0) / total).toFixed(1)
+                : '—';
+            document.getElementById('stat-avg').textContent = avg !== '—' ? avg : '—';
+            document.getElementById('stat-dept').textContent = new Set(feedbackData.map(f => f.dept)).size;
+
+            const el = document.getElementById('home-recent');
+            const recent = feedbackData.slice(0, 3);
+            if (!recent.length) {
+                el.innerHTML = makeEmpty('💬', 'No feedback yet', 'Be the first to share your experience.');
+                return;
+            }
+            el.innerHTML = recent.map(f => feedbackCard(f, true)).join('');
+        }
+
+        // ──────────────────────────────────────────────────────────────────────────────
+        // RENDER BROWSE
+        // ──────────────────────────────────────────────────────────────────────────────
+        function setFilter(val, btn) {
+            currentFilter = val;
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            renderBrowse();
+        }
+
+        function renderBrowse() {
+            const searchTerm = (document.getElementById('browse-search')?.value || '').toLowerCase().trim();
+            let filtered = currentFilter === 'all'
+                ? [...feedbackData]
+                : feedbackData.filter(f => f.category === currentFilter);
+
+            if (searchTerm) {
+                filtered = filtered.filter(f =>
+                    f.text.toLowerCase().includes(searchTerm) ||
+                    f.dept.toLowerCase().includes(searchTerm) ||
+                    (f.course || '').toLowerCase().includes(searchTerm) ||
+                    f.category.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            const meta = document.getElementById('browse-meta');
+            meta.textContent = `${filtered.length} review${filtered.length !== 1 ? 's' : ''}${currentFilter !== 'all' ? ` in ${currentFilter}` : ''}${searchTerm ? ` matching "${searchTerm}"` : ''}`;
+
+            const list = document.getElementById('browse-list');
+            if (!filtered.length) {
+                list.innerHTML = makeEmpty('🔍', 'No feedback found', searchTerm ? 'Try a different search term.' : 'No feedback in this category yet.');
+                return;
+            }
+            list.innerHTML = filtered.map(f => feedbackCard(f, false)).join('');
+        }
+
+        // ──────────────────────────────────────────────────────────────────────────────
+        // FEEDBACK CARD
+        // ──────────────────────────────────────────────────────────────────────────────
+        function feedbackCard(f, compact) {
+            const stars = '★'.repeat(f.rating) + '☆'.repeat(5 - f.rating);
+            const sentCls = f.sentiment === 'positive' ? 'badge-pos' : f.sentiment === 'negative' ? 'badge-neg' : 'badge-neu';
+            const sentWord = f.sentiment || 'neutral';
+            return `<div class="feedback-item">
+    <div class="fi-top">
+      <div class="fi-meta">
+        <span class="tag tag-dept">${esc(f.dept)}</span>
+        ${f.course ? `<span class="fi-course">${esc(f.course)}</span>` : ''}
+        <span class="tag tag-cat">${esc(f.category)}</span>
+      </div>
+      <span class="fi-stars" title="${f.rating} out of 5">${stars}</span>
+    </div>
+    <div class="fi-text">${esc(f.text)}</div>
+    <div class="fi-footer">
+      <span class="fi-date">${esc(f.date)}</span>
+      <span class="badge ${sentCls}">${sentWord}</span>
+      ${!compact ? `<button class="ai-btn" onclick="toggleAISummary(${f.id}, this)" type="button">✦ AI Summary</button>` : ''}
+    </div>
+    ${!compact ? `<div class="ai-summary" id="ai-summary-${f.id}">
+      <div class="ai-label">✦ AI Summary</div>
+      <p id="ai-summary-text-${f.id}" style="margin-top:4px"></p>
+    </div>` : ''}
+  </div>`;
+        }
+
+        async function toggleAISummary(id, btn) {
+            const box = document.getElementById('ai-summary-' + id);
+            if (!box) return;
+            if (box.classList.contains('visible')) {
+                box.classList.remove('visible');
+                btn.textContent = '✦ AI Summary';
+                return;
+            }
+            box.classList.add('visible');
+            btn.textContent = '✦ Hide';
+            const textEl = document.getElementById('ai-summary-text-' + id);
+            const entry = feedbackData.find(f => f.id === id);
+            if (!entry) { textEl.textContent = 'Feedback not found.'; return; }
+            if (entry.aiSummary) { textEl.textContent = entry.aiSummary; return; }
+
+            textEl.innerHTML = '<span class="spinner"></span><em>Summarising with AI…</em>';
+            try {
+                const res = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-6',
+                        max_tokens: 130,
+                        system: 'Summarise this college feedback in 1–2 concise, neutral sentences, highlighting the core message and any specific points raised. Write in third person. No markdown.',
+                        messages: [{ role: 'user', content: entry.text }]
+                    })
+                });
+                const data = await res.json();
+                if (data.error) throw new Error(data.error.message);
+                const summary = data.content?.[0]?.text?.trim() || 'Could not generate summary.';
+                textEl.textContent = summary;
+                entry.aiSummary = summary;
+                saveData();
+            } catch (err) {
+                textEl.textContent = 'Could not generate summary at this time.';
+            }
+        }
+
+        // ──────────────────────────────────────────────────────────────────────────────
+        // RENDER INSIGHTS
+        // ──────────────────────────────────────────────────────────────────────────────
+        function renderInsights() {
+            const total = feedbackData.length;
+            document.getElementById('ins-total').textContent = total;
+
+            if (!total) {
+                document.getElementById('ins-avg').textContent = '—';
+                document.getElementById('ins-pos').textContent = '0%';
+                document.getElementById('ins-top-dept').textContent = '—';
+                document.getElementById('dept-bars').innerHTML = '<div style="color:var(--muted);font-size:14px">No data yet — submit some feedback to see insights.</div>';
+                return;
+            }
+
+            const avg = (feedbackData.reduce((s, f) => s + f.rating, 0) / total).toFixed(2);
+            document.getElementById('ins-avg').textContent = avg;
+            const posCount = feedbackData.filter(f => f.sentiment === 'positive').length;
+            const pos = Math.round((posCount / total) * 100);
+            document.getElementById('ins-pos').textContent = pos + '%';
+
+            // Dept breakdown
+            const deptCount = {};
+            feedbackData.forEach(f => { deptCount[f.dept] = (deptCount[f.dept] || 0) + 1; });
+            const sorted = Object.entries(deptCount).sort((a, b) => b[1] - a[1]);
+            document.getElementById('ins-top-dept').textContent = sorted[0]?.[0] || '—';
+
+            const max = sorted[0]?.[1] || 1;
+            document.getElementById('dept-bars').innerHTML = sorted.slice(0, 8).map(([dept, count]) =>
+                `<div class="dept-bar-wrap">
+      <div class="dept-bar-label">
+        <span>${esc(dept)}</span>
+        <span>${count} review${count > 1 ? 's' : ''}</span>
+      </div>
+      <div class="dept-bar-track">
+        <div class="dept-bar-fill" style="width:${Math.round((count / max) * 100)}%"></div>
+      </div>
+    </div>`
+            ).join('');
+
+            // Animate bars
+            requestAnimationFrame(() => {
+                document.querySelectorAll('.dept-bar-fill').forEach(b => {
+                    const w = b.style.width;
+                    b.style.width = '0';
+                    requestAnimationFrame(() => { b.style.width = w; });
+                });
+            });
+
+            // Reset AI report button if report not yet generated
+            if (!aiReportGenerated) {
+                const btn = document.getElementById('ai-report-btn');
+                if (btn) { btn.disabled = false; btn.textContent = 'Generate AI Report'; }
+                document.getElementById('ai-report-status').textContent = '';
+            }
+        }
+
+        async function generateInsights() {
+            if (!feedbackData.length) { showToast('No feedback data yet.'); return; }
+            const btn = document.getElementById('ai-report-btn');
+            const status = document.getElementById('ai-report-status');
+            const textEl = document.getElementById('ai-insights-text');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>Generating…';
+            status.textContent = '';
+            textEl.innerHTML = '<span class="spinner"></span><em style="color:var(--muted)">Analysing feedback patterns…</em>';
+
+            const summary = feedbackData.slice(0, 25).map(f =>
+                `[Dept: ${f.dept} | Category: ${f.category} | Rating: ${f.rating}/5 | Sentiment: ${f.sentiment}]\n"${f.text.slice(0, 150)}"`
+            ).join('\n\n');
+
+            try {
+                const res = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-6',
+                        max_tokens: 380,
+                        system: 'You are an academic administrator analysing student feedback. Write a concise 4–5 sentence report covering: (1) overall campus sentiment and rating trend, (2) the top 2 strengths students highlight, (3) the top 2 concerns needing attention, (4) one clear, specific recommendation for administration. Be data-driven and specific. Use plain prose, no headers, no bullet points, no markdown.',
+                        messages: [{ role: 'user', content: `Analyse these ${feedbackData.length} college feedback entries and write the report:\n\n${summary}` }]
+                    })
+                });
+                const data = await res.json();
+                if (data.error) throw new Error(data.error.message);
+                const report = data.content?.[0]?.text?.trim() || 'Could not generate report.';
+                textEl.textContent = report;
+                aiReportGenerated = true;
+                btn.style.display = 'none';
+                status.textContent = '✓ Report generated';
+            } catch (err) {
+                textEl.textContent = 'Could not generate AI insights at this time. Please try again.';
+                btn.disabled = false;
+                btn.textContent = 'Retry';
+            }
+        }
+
+        // ──────────────────────────────────────────────────────────────────────────────
+        // UTILITIES
+        // ──────────────────────────────────────────────────────────────────────────────
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        function esc(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#x27;');
+        }
+
+        function makeEmpty(icon, heading, sub) {
+            return `<div class="empty"><div class="empty-icon">${icon}</div><h3>${heading}</h3><p>${sub}</p></div>`;
+        }
+
+        // ──────────────────────────────────────────────────────────────────────────────
+        // SEED DATA
+        // ──────────────────────────────────────────────────────────────────────────────
+        if (!feedbackData.length) {
+            feedbackData = [
+                { id: 1001, dept: 'Computer Science', course: 'Data Structures', category: 'Teaching', rating: 5, text: 'Professor Mehta is outstanding. She explains complex concepts using real-world analogies, and her office hours are genuinely helpful. The assignments are well-structured and the grading is transparent. Easily the best course I have taken in this department.', sentiment: 'positive', date: '10 Jun 2026', aiSummary: null },
+                { id: 1002, dept: 'Physics', course: null, category: 'Labs', rating: 2, text: 'The physics lab equipment is severely outdated. Several oscilloscopes malfunction regularly and students often share instruments in groups of four. Experiments feel rushed because of limited resources and the lab sessions overrun constantly. This needs urgent investment.', sentiment: 'negative', date: '14 Jun 2026', aiSummary: null },
+                { id: 1003, dept: 'Business Administration', course: null, category: 'Canteen', rating: 4, text: 'The new canteen menu introduced this semester is a significant improvement. There are more vegetarian and vegan options, hygiene standards have visibly improved, and pricing is fair for the portion sizes. Adding a South Indian counter would make it perfect.', sentiment: 'positive', date: '22 Jun 2026', aiSummary: null },
+                { id: 1004, dept: 'Electrical Engineering', course: 'Circuit Theory', category: 'Teaching', rating: 2, text: 'Lectures are far too fast-paced and lecture slides are never shared. It is extremely difficult to keep up without supplementary materials. The tutorial system is ineffective and the faculty is rarely available outside scheduled hours. Significant improvement needed.', sentiment: 'negative', date: '25 Jun 2026', aiSummary: null },
+                { id: 1005, dept: 'Mathematics', course: null, category: 'Library', rating: 5, text: 'The library has an exceptional collection of mathematics and statistics textbooks. Digital access to JSTOR and other journal databases is invaluable for assignments. The reading rooms are quiet and well-lit. The extended library hours this semester have been extremely helpful.', sentiment: 'positive', date: '27 Jun 2026', aiSummary: null },
+                { id: 1006, dept: 'Civil Engineering', course: 'Structural Analysis', category: 'Teaching', rating: 3, text: 'The course content is comprehensive and relevant but the teaching style leans heavily on rote learning. More problem-solving sessions and industry case studies would make this far more engaging and useful for students aiming at practical engineering roles.', sentiment: 'neutral', date: '28 Jun 2026', aiSummary: null },
+            ];
+            saveData();
+        }
+
+        // ──────────────────────────────────────────────────────────────────────────────
+        // INIT
+        // ──────────────────────────────────────────────────────────────────────────────
+        initStars();
+        initChips();
+        renderHome();
+    </script>
+</body>
+
+</html>
